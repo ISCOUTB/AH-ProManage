@@ -4,7 +4,7 @@ from conexion import get_db_connection
 router = APIRouter()
 
 @router.post("/crear/")
-async def crear_asignacion(Id_asig: int, Id_usuario: int):
+async def crear_asignacion(id_asig: int, id_usuario: int):
     try:
         with get_db_connection() as connection:
             cursor = connection.cursor()
@@ -12,7 +12,7 @@ async def crear_asignacion(Id_asig: int, Id_usuario: int):
             INSERT INTO public."Proyecto-asig" ("Id_asig", "Id_usuario") 
             VALUES (%s, %s);
             '''
-            cursor.execute(insert_query, (Id_asig, Id_usuario))
+            cursor.execute(insert_query, (id_asig, id_usuario))
             connection.commit()
             return {"message": "Asignación creada exitosamente"}
     except Exception as e:
@@ -30,12 +30,12 @@ async def obtener_asignaciones():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/{Id_asig}")
-async def obtener_asignacion(Id_asig: int):
+@router.get("/{id_asig}")
+async def obtener_asignacion(id_asig: int):
     try:
         with get_db_connection() as connection:
             cursor = connection.cursor()
-            cursor.execute('SELECT * FROM public."Proyecto-asig" WHERE "Id_asig" = %s;', (Id_asig,))
+            cursor.execute('SELECT * FROM public."Proyecto-asig" WHERE "Id_asig" = %s;', (id_asig,))
             asignacion = cursor.fetchone()
             cursor.close()
             if asignacion is None:
@@ -44,12 +44,12 @@ async def obtener_asignacion(Id_asig: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.delete("/{Id_asig}")
-async def eliminar_asignacion(Id_asig: int):
+@router.delete("/{id_asig}")
+async def eliminar_asignacion(id_asig: int):
     try:
         with get_db_connection() as connection:
             cursor = connection.cursor()
-            cursor.execute('DELETE FROM public."Proyecto-asig" WHERE "Id_asig" = %s;', (Id_asig,))
+            cursor.execute('DELETE FROM public."Proyecto-asig" WHERE "Id_asig" = %s;', (id_asig,))
             connection.commit()
             cursor.close()
             return {"message": "Asignación eliminada exitosamente"}

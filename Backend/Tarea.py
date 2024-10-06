@@ -6,7 +6,7 @@ router = APIRouter()
 
             
 @router.get("/")
-async def Tareas():
+async def tareas():
     try:
         with get_db_connection() as connection:
             cursor = connection.cursor()
@@ -18,11 +18,11 @@ async def Tareas():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/{Id_tarea}")
-async def obtener_tarea(Id_tarea: int):
+@router.get("/{id_tarea}")
+async def obtener_tarea(id_tarea: int):
     with get_db_connection() as connection:
         cursor = connection.cursor()
-        cursor.execute('SELECT * FROM public."Tarea" WHERE "Id_tarea" = %s;', (Id_tarea,))
+        cursor.execute('SELECT * FROM public."Tarea" WHERE "Id_tarea" = %s;', (id_tarea,))
         tarea = cursor.fetchone()
         cursor.close()
         if tarea is None:
@@ -31,7 +31,7 @@ async def obtener_tarea(Id_tarea: int):
 
 
 @router.post("/creacion_tarea/")
-async def crear_tarea(Nombre, Descripcion,Fecha_inicio,Fecha_final,Id_proyecto,Id_asig_T,Id_estado):
+async def crear_tarea(nombre, descripcion,fecha_inicio,fecha_final,id_proyecto,id_asig_T,id_estado):
    try:
     with get_db_connection() as connection:
         cursor = connection.cursor()
@@ -39,7 +39,7 @@ async def crear_tarea(Nombre, Descripcion,Fecha_inicio,Fecha_final,Id_proyecto,I
         INSERT INTO  public."Tarea" ("Nombre", "Descripcion", "Fecha_inicio", "Fecha_final", "Id_proyecto", "Id_asig_T","Id_estado") 
         VALUES (%s, %s, %s, %s, %s, %s,%s) RETURNING "Id_tarea";
         '''
-        cursor.execute(insert_query, (Nombre, Descripcion,Fecha_inicio,Fecha_final,Id_proyecto,Id_asig_T,Id_estado))
+        cursor.execute(insert_query, (nombre, descripcion,fecha_inicio,fecha_final,id_proyecto,id_asig_T,id_estado))
         connection.commit()
         cursor.close()
         connection.close()
@@ -51,11 +51,11 @@ async def crear_tarea(Nombre, Descripcion,Fecha_inicio,Fecha_final,Id_proyecto,I
 
 
 
-@router.delete("/{Id_tarea}")
-async def eliminar_tarea(Id_tarea: int):
+@router.delete("/{id_tarea}")
+async def eliminar_tarea(id_tarea: int):
     with get_db_connection() as connection:
         cursor = connection.cursor()
-        cursor.execute('DELETE FROM public."Tarea" WHERE "Id_tarea" = %s;', (Id_tarea,))
+        cursor.execute('DELETE FROM public."Tarea" WHERE "Id_tarea" = %s;', (id_tarea,))
         connection.commit()  
         cursor.close()
         return {"message": "Tarea eliminada"}

@@ -18,11 +18,11 @@ async def obtener_usuarios():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/{Id_usuario}")
-async def obtener_usuario(Id_usuario: int):
+@router.get("/{id_usuario}")
+async def obtener_usuario(id_usuario: int):
     with get_db_connection() as connection:
         cursor = connection.cursor()
-        cursor.execute('SELECT * FROM public."Usuario" WHERE "Id_usuario" = %s;', (Id_usuario,))
+        cursor.execute('SELECT * FROM public."Usuario" WHERE "Id_usuario" = %s;', (id_usuario,))
         usuario = cursor.fetchone()
         cursor.close()
         if usuario is None:
@@ -30,7 +30,7 @@ async def obtener_usuario(Id_usuario: int):
         return usuario
 
 @router.post("/usuarios/")
-async def crear_usuario(Primer_nombre, Segundo_nombre, Primer_apellido, Segundo_apellido, Email, Contraseña):
+async def crear_usuario(primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, email, contraseña):
    try:
     with get_db_connection() as connection:
         cursor = connection.cursor()
@@ -38,7 +38,7 @@ async def crear_usuario(Primer_nombre, Segundo_nombre, Primer_apellido, Segundo_
         INSERT INTO  public."Usuario" ("Primer_nombre", "Segundo_nombre", "Primer_apellido", "Segundo_apellido", "Email", "Contraseña") 
         VALUES (%s, %s, %s, %s, %s, %s) RETURNING "Id_usuario";
         '''
-        cursor.execute(insert_query, (Primer_nombre, Segundo_nombre, Primer_apellido, Segundo_apellido, Email, Contraseña))
+        cursor.execute(insert_query, (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, email, contraseña))
         connection.commit()
         cursor.close()
         connection.close()
@@ -48,11 +48,11 @@ async def crear_usuario(Primer_nombre, Segundo_nombre, Primer_apellido, Segundo_
         return False
 
 
-@router.delete("/{Id_usuario}")
-async def eliminar_usuario(Id_usuario: int):
+@router.delete("/{id_usuario}")
+async def eliminar_usuario(id_usuario: int):
     with get_db_connection() as connection:
         cursor = connection.cursor()
-        cursor.execute('DELETE FROM public."Usuario" WHERE "Id_usuario" = %s;', (Id_usuario,))
+        cursor.execute('DELETE FROM public."Usuario" WHERE "Id_usuario" = %s;', (id_usuario,))
         connection.commit()  
         cursor.close()
         return {"message": "Usuario eliminado"}

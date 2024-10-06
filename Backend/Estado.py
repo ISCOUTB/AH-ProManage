@@ -15,12 +15,12 @@ async def obtener_estados():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/{Id_estado}")
-async def obtener_estado_id(Id_estado: int):
+@router.get("/{id_estado}")
+async def obtener_estado_id(id_estado: int):
     try:
         with get_db_connection() as connection:
             cursor = connection.cursor()
-            cursor.execute('SELECT * FROM public."Estado" WHERE "Id_estado" = %s;', (Id_estado,))
+            cursor.execute('SELECT * FROM public."Estado" WHERE "Id_estado" = %s;', (id_estado,))
             estado = cursor.fetchone()
             cursor.close()
             if estado is None:

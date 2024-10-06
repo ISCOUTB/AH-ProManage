@@ -2,7 +2,7 @@
 FROM python:3.11
 
 
-WORKDIR /PROYECT-HJ-COPIA
+WORKDIR /app
 
 
 COPY requirements.txt .

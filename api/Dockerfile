@@ -2,11 +2,11 @@
 FROM python:3.11
 
 
-WORKDIR /app
+WORKDIR /api
 
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requerimientos.txt .
+RUN pip install --no-cache-dir -r requerimientos.txt
 
 # Copiar todo el contenido del proyecto a la imagen de Docker
 COPY . .
@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 8000
 
 # Comando para correr la aplicación con uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

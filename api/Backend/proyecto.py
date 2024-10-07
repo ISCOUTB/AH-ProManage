@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from conexion import get_db_connection
+from api.conexion import get_db_connection
 import psycopg2
 
 router = APIRouter()

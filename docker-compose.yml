@@ -1,38 +1,29 @@
-name: Build y SonarCloud
+services:
+  api:
+    build: ./api
+    container_name: fastapi-container
+    ports:
+      - "8000:8000"
+    environment:
+      DB_NAME: railway
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: KTONJqnAteMSScvyyolzAhfIrBZIeAIX
+    depends_on:
+      - db
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
+  db:
+    image: postgres:16
+    container_name: postgres-container
+    environment:
+      POSTGRES_DB: railway
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: KTONJqnAteMSScvyyolzAhfIrBZIeAIX
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-jobs:
-  build-and-scan:
-    runs-on: ubuntu-latest
-    services:
-      api:
-        build: .
-        container_name: fastapi-container
-        command: uvicorn main:app --host 0.0.0.0 --port 8000
-        ports:
-          - "8000:8000"
-        environment:
-          - DB_NAME=railway
-          - DB_HOST=(link unavailable)
-          - DB_PORT=52744
-          - DB_USER=postgres
-          - DB_PASSWORD=KTONJqnAteMSScvyyolzAhfIrBZIeAIX
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+volumes:
+  postgres_data:

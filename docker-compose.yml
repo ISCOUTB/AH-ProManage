@@ -3,10 +3,17 @@ services:
     build: ./api
     container_name: fastapi-container
     ports:
-      - "8000:8000"
+      - "7012:8000"
     environment:
       DB_NAME: railway
       DB_HOST: autorack.proxy.rlwy.net
       DB_PORT: 52744
       DB_USER: postgres
       DB_PASSWORD: KTONJqnAteMSScvyyolzAhfIrBZIeAIX
+    networks:
+      - ag 
+
+  
+networks:
+  ag:
+    external: true

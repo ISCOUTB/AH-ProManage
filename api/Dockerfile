@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requerimientos.txt
 COPY . .
 
 # Exponer el puerto donde correrá la API
-EXPOSE 8000
+EXPOSE 8022
 
 # Comando para correr la aplicación con uvicorn
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8022"]

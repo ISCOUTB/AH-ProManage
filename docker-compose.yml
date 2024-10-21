@@ -1,7 +1,7 @@
 services:
   api:
     build: ./api
-    container_name: ah_ProManage_web
+    container_name: ah_promanage_web
     ports:
       - "7012:8000"
     environment:

@@ -3,7 +3,7 @@ services:
     build: ./api
     container_name: ah_promanage_web
     ports:
-      - "7012:8000"
+      - 8022:8022
     environment:
       DB_NAME: railway
       DB_HOST: autorack.proxy.rlwy.net

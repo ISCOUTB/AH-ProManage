@@ -26,6 +26,6 @@ class TareaCreacion(BaseModel):
     Fecha_vencimiento: date
     Id_estado: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 

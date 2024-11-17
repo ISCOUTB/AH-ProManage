@@ -36,4 +36,4 @@ async def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
 if __name__=="__main__":
-    uvicorn.run(app,host="localhost",port=8022)
+    uvicorn.run(app,host="0.0.0.0",port=8022)

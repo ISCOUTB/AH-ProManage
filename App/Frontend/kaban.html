@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ proyecto.Nombre }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e6f2ff 0%, #b3d4fc 100%);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #1a5f7a;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .kanban-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            gap: 20px;
+            height: calc(100vh - 150px);
+        }
+        .kanban-column {
+            width: 30%;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        .kanban-column:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 36px rgba(31, 38, 135, 0.25);
+        }
+        .kanban-column h2 {
+            text-align: center;
+            color: #1a5f7a;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #b3d4fc;
+        }
+        .kanban-column ul {
+            list-style-type: none;
+            padding: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .task-card {
+            background-color: #ffffff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #4a90e2;
+        }
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .task-card h3 {
+            margin: 0 0 5px 0;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        .task-card p {
+            margin: 0;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .add-task-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        .add-task-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .close:hover,
+        .close:focus {
+            color: #2c3e50;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        form input, form textarea, form select {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+        form input:focus, form textarea:focus, form select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        form button {
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        form button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .delete-btn {
+            background-color: #e74c3c;
+            margin-top: 10px;
+        }
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        .task-state {
+            font-style: italic;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ proyecto.Nombre }}</h1>
+    
+    <div class="kanban-container">
+        <div class="kanban-column" id="sin-iniciar">
+            <h2>Sin Iniciar</h2>
+            <ul>
+                {% for tarea in tareas if tarea.Id_estado == 1 %}
+                    <li class="task-card" data-id="{{ tarea.Id_tarea }}" data-nombre="{{ tarea.Nombre }}" data-descripcion="{{ tarea.Descripcion }}" data-fecha="{{ tarea.Fecha_vencimiento }}" data-estado="{{ tarea.Id_estado }}">
+                        <h3>{{ tarea.Nombre }}</h3>
+                        <p>Vence: {{ tarea.Fecha_vencimiento }}</p>
+                        <p class="task-state">Estado: Sin Iniciar</p>
+                    </li>
+                {% endfor %}
+            </ul>
+            <button class="add-task-btn" data-estado="1">+ Añadir Tarea</button>
+        </div>
+
+        <div class="kanban-column" id="en-progreso">
+            <h2>En Progreso</h2>
+            <ul>
+                {% for tarea in tareas if tarea.Id_estado == 2 %}
+                    <li class="task-card" data-id="{{ tarea.Id_tarea }}" data-nombre="{{ tarea.Nombre }}" data-descripcion="{{ tarea.Descripcion }}" data-fecha="{{ tarea.Fecha_vencimiento }}" data-estado="{{ tarea.Id_estado }}">
+                        <h3>{{ tarea.Nombre }}</h3>
+                        <p>Vence: {{ tarea.Fecha_vencimiento }}</p>
+                        <p class="task-state">Estado: En Progreso</p>
+                    </li>
+                {% endfor %}
+            </ul>
+            <button class="add-task-btn" data-estado="2">+ Añadir Tarea</button>
+        </div>
+
+        <div class="kanban-column" id="terminado">
+            <h2>Terminado</h2>
+            <ul>
+                {% for tarea in tareas if tarea.Id_estado == 3 %}
+                    <li class="task-card" data-id="{{ tarea.Id_tarea }}" data-nombre="{{ tarea.Nombre }}" data-descripcion="{{ tarea.Descripcion }}" data-fecha="{{ tarea.Fecha_vencimiento }}" data-estado="{{ tarea.Id_estado }}">
+                        <h3>{{ tarea.Nombre }}</h3>
+                        <p>Vence: {{ tarea.Fecha_vencimiento }}</p>
+                        <p class="task-state">Estado: Terminado</p>
+                    </li>
+                {% endfor %}
+            </ul>
+            <button class="add-task-btn" data-estado="3">+ Añadir Tarea</button>
+        </div>
+    </div>
+
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Detalles de la Tarea</h2>
+            <form id="taskForm">
+                <input type="hidden" id="taskId" name="Id_tarea">
+                <input type="text" id="taskNombre" name="Nombre" placeholder="Nombre de la tarea" required>
+                <textarea id="taskDescripcion" name="Descripcion" placeholder="Descripción" required></textarea>
+                <input type="date" id="taskFechaVencimiento" name="Fecha_vencimiento" required>
+                <select id="taskEstado" name="Id_estado" required>
+                    <option value="1">Sin Iniciar</option>
+                    <option value="2">En Progreso</option>
+                    <option value="3">Terminado</option>
+                </select>
+                <button type="submit">Guardar Cambios</button>
+                <button type="button" id="deleteTaskBtn" class="delete-btn">Eliminar Tarea</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("taskModal");
+        const closeBtn = document.getElementsByClassName("close")[0];
+        const taskForm = document.getElementById("taskForm");
+        const addTaskBtns = document.querySelectorAll('.add-task-btn');
+        const deleteTaskBtn = document.getElementById("deleteTaskBtn");
+
+       
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('click', () => openTaskModal(card));
+        });
+
+      
+        closeBtn.onclick = () => modal.style.display = "none";
+        window.onclick = (event) => {
+            if (event.target == modal) modal.style.display = "none";
+        };
+
+      
+        addTaskBtns.forEach(btn => {
+            btn.addEventListener('click', () => openAddTaskModal(btn.dataset.estado));
+        });
+
+       
+        function openTaskModal(taskCard) {
+            document.getElementById('modalTitle').textContent = 'Editar Tarea';
+            document.getElementById('taskId').value = taskCard.dataset.id;
+            document.getElementById('taskNombre').value = taskCard.dataset.nombre;
+            document.getElementById('taskDescripcion').value = taskCard.dataset.descripcion;
+            document.getElementById('taskFechaVencimiento').value = taskCard.dataset.fecha;
+            document.getElementById('taskEstado').value = taskCard.dataset.estado;
+            deleteTaskBtn.style.display = 'block';
+            modal.style.display = "block";
+        }
+
+       
+        function openAddTaskModal(estado) {
+            document.getElementById('modalTitle').textContent = 'Añadir Nueva Tarea';
+            taskForm.reset();
+            document.getElementById('taskEstado').value = estado;
+            deleteTaskBtn.style.display = 'none';
+            modal.style.display = "block";
+        }
+
+       
+        taskForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(taskForm);
+            const taskId = formData.get('Id_tarea');
+            const url = taskId ? 
+                `/proyectos/{{ proyecto.Id_proyecto }}/tareas/${taskId}` : 
+                `/proyectos/{{ proyecto.Id_proyecto }}/crear`;
+            const method = taskId ? 'PATCH' : 'POST';
+
+           
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(jsonData)
+                });
+
+                if (response.ok) {
+                    modal.style.display = "none";
+                    location.reload(); 
+                } else {
+                    const errorData = await response.json();
+                    alert("Error: " + JSON.stringify(errorData));
+                }
+            } catch (error) {
+                alert("Error al procesar la solicitud: " + error.message);
+            }
+        });
+
+        // Eliminar tarea
+        deleteTaskBtn.addEventListener('click', async function() {
+            const taskId = document.getElementById('taskId').value;
+            if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+                try {
+                    const response = await fetch(`/proyectos/{{ proyecto.Id_proyecto }}/tareas/${taskId}`, {
+                        method: 'DELETE'
+                    });
+                    if (response.ok) {
+                        modal.style.display = "none";
+                        location.reload(); 
+                    } else {
+                        const errorData = await response.json();
+                        alert("Error al eliminar la tarea: " + JSON.stringify(errorData));
+                    }
+                } catch (error) {
+                    alert("Error al procesar la solicitud: " + error.message);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

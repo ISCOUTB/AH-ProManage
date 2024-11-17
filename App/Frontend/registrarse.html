@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0061f2, #00c6fb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            display: flex;
+            width: 800px;
+            height: 500px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-section {
+            width: 50%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .register-section h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #0061f2;
+            font-weight: 600;
+        }
+
+        .register-section input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .register-section input:focus {
+            outline: none;
+            border-color: #0061f2;
+        }
+
+        .register-section button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0061f2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .register-section button:hover {
+            background-color: #0056d6;
+        }
+
+        .login-link {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #0061f2;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #0056d6;
+        }
+
+        .image-section {
+            width: 50%;
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .image-section img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                width: 90%;
+            }
+
+            .register-section, .image-section {
+                width: 100%;
+            }
+
+            .image-section {
+                order: -1;
+                padding: 20px;
+            }
+
+            .image-section img {
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-section">
+            <h2>Crear cuenta</h2>
+            <form action="/registro" method="post">
+                <input type="text" name="Primer_nombre" placeholder="Primer Nombre" required aria-label="Primer Nombre">
+                <input type="text" name="Segundo_nombre" placeholder="Segundo Nombre" aria-label="Segundo Nombre">
+                <input type="text" name="Primer_apellido" placeholder="Primer Apellido" required aria-label="Primer Apellido">
+                <input type="text" name="Segundo_apellido" placeholder="Segundo Apellido" required aria-label="Segundo Apellido">
+                <input type="email" name="Email" placeholder="Correo electrónico" required aria-label="Correo electrónico">
+                <input type="password" name="Contraseña" placeholder="Contraseña" required aria-label="Contraseña">
+                <button type="submit">Registrarse</button>
+            </form>
+            <div class="login-link">
+                ¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a>
+            </div>
+        </div>
+        <div class="image-section">
+            <img src="https://via.placeholder.com/400x400.png?text=Imagen+de+Registro" alt="Imagen representativa de registro">
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+

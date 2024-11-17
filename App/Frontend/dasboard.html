@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Proyectos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+        }
+
+        .dashboard-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .profile-header {
+            margin-bottom: 2rem;
+        }
+
+        .profile-header h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-card {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-image {
+            width: 300px;
+            height: 300px;
+            border-radius: 0.5rem;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            overflow: hidden;
+        }
+
+        .profile-info {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.5rem 1rem;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .projects-section {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .create-project-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .create-project-button:hover {
+            background-color: #45a049;
+        }
+
+        .projects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .projects-table th,
+        .projects-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .projects-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .projects-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 2rem;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-button {
+            padding: 0.25rem 0.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .modify-button {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .modify-button:hover {
+            background-color: #2980b9;
+        }
+
+        .delete-button {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+            .profile-card {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-image {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'sidebar_navegation.html' %}
+    <main class="dashboard-content">
+        <div class="profile-header">
+            <h1>{{ usuario.Nombre }}</h1>
+            <div class="profile-card">
+                <div class="profile-info">
+                    <div class="info-grid">
+                        <span class="info-label">Teléfono:</span>
+                        <span>{{ usuario.Telefono }}</span>
+                        <span class="info-label">Posición:</span>
+                        <span>{{ usuario.Posicion }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <section class="projects-section">
+            <div class="section-header">
+                <h2>Proyectos</h2>
+                <div>
+                    <button class="create-project-button" id="createProjectButton">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Crear Proyecto
+                    </button>
+                </div>
+            </div>
+            
+            <table class="projects-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Fecha de inicio</th>
+                        <th>Fecha final</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="projectsTableBody">
+                  
+                </tbody>
+            </table>
+        </section>
+
+       
+        <div id="projectModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="modalTitle">Crear Nuevo Proyecto</h2>
+                <form id="projectForm">
+                    <input type="hidden" id="projectId" name="Id_proyecto">
+                    <div class="form-group">
+                        <label for="Nombre">Nombre:</label>
+                        <input type="text" id="Nombre" name="Nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Descripcion">Descripción:</label>
+                        <textarea id="Descripcion" name="Descripcion" required rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="Fecha_inicio">Fecha de inicio:</label>
+                        <input type="date" id="Fecha_inicio" name="Fecha_inicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Fecha_final">Fecha final:</label>
+                        <input type="date" id="Fecha_final" name="Fecha_final" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Id_estado">Estado:</label>
+                        <select id="Id_estado" name="Id_estado" required>
+                            <option value="1">Sin iniciar</option>
+                            <option value="2">En progreso</option>
+                            <option value="3">Terminado</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-button">Guardar Proyecto</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            cargaProyectos();
+            setupModal();
+        });
+        
+        async function cargaProyectos() {
+            try {
+                const response = await fetch('/proyectos');
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Error al obtener los proyectos');
+                }
+                const proyectos = await response.json();
+        
+                const tableBody = document.getElementById('projectsTableBody');
+                tableBody.innerHTML = ''; // Limpiar la tabla antes de llenarla
+        
+                proyectos.forEach(proyecto => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${proyecto.Nombre}</td>
+                        <td>${proyecto.Descripcion}</td>
+                        <td>${formatDate(proyecto.Fecha_inicio)}</td>
+                        <td>${formatDate(proyecto.Fecha_final)}</td>
+                        <td>${getStatusBadge(proyecto.Id_estado)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-button modify-button" onclick="modificarProyecto(${proyecto.Id_proyecto})">Modificar</button>
+                                <button class="action-button delete-button" onclick="eliminarProyecto(${proyecto.Id_proyecto})">Eliminar</button>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error al cargar los proyectos:', error);
+                const tableBody = document.getElementById('projectsTableBody');
+                tableBody.innerHTML = `<tr><td colspan="6">Error al cargar los proyectos: ${error.message}</td></tr>`;
+            }
+        }
+        
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+        
+        function getStatusBadge(status) {
+            const statusMap = {
+                1: { text: 'Sin iniciar', color: '#e74c3c' },
+                2: { text: 'En progreso', color: '#f39c12' },
+                3: { text: 'Terminado', color: '#27ae60' }
+            };
+            const { text, color } = statusMap[status] || { text: 'Desconocido', color: '#95a5a6' };
+            return `<span class="badge" style="background-color: ${color};">${text}</span>`;
+        }
+        
+        async function modificarProyecto(id_proyecto) {
+            try {
+                
+                const nombre = document.getElementById('Nombre').value;
+                const descripcion = document.getElementById('Descripcion').value;
+                const fechaInicio = document.getElementById('Fecha_inicio').value;
+                const fechaFinal = document.getElementById('Fecha_final').value;
+                const idEstado = document.getElementById('Id_estado').value;
+        
+                const projectData = {
+                    Nombre: nombre,
+                    Descripcion: descripcion,
+                    Fecha_inicio: fechaInicio,
+                    Fecha_final: fechaFinal,
+                    Id_estado: parseInt(idEstado, 10)
+                };
+        
+                const response = await fetch(`/proyectos/${id_proyecto}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(projectData),
+                    credentials: 'include' 
+                });
+        
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Error al modificar el proyecto');
+                }
+        
+                const updatedProject = await response.json();
+                console.log('Proyecto actualizado:', updatedProject);
+        
+              
+                document.getElementById('projectModal').style.display = 'none';
+        
+               
+                await cargaProyectos();
+        
+                alert('Proyecto modificado exitosamente');
+            } catch (error) {
+                console.error('Error al modificar el proyecto:', error);
+                alert('Error al modificar el proyecto: ' + error.message);
+            }
+        }
+        
+        async function eliminarProyecto(id_proyecto) {
+            if (confirm('¿Estás seguro de que quieres eliminar este proyecto?')) {
+                try {
+                    const response = await fetch(`/proyectos/${id_proyecto}`, {
+                        method: 'DELETE',
+                    });
+        
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Error al eliminar el proyecto');
+                    }
+        
+                    await cargaProyectos(); 
+                    alert('Proyecto eliminado exitosamente');
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert(error.message);
+                }
+            }
+        }
+        
+        function setupModal() {
+            const modal = document.getElementById('projectModal');
+            const btn = document.getElementById('createProjectButton');
+            const span = document.getElementsByClassName('close')[0];
+            const form = document.getElementById('projectForm');
+        
+            btn.onclick = function() {
+                modal.style.display = 'block';
+               
+                form.reset();
+                document.getElementById('projectId').value = '';
+                document.getElementById('modalTitle').textContent = 'Crear Nuevo Proyecto';
+            }
+        
+            span.onclick = function() {
+                modal.style.display = 'none';
+            }
+        
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        
+            form.onsubmit = handleProjectSubmit;
+        }
+        
+        async function handleProjectSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const projectData = Object.fromEntries(formData.entries());
+            const isEditing = projectData.Id_proyecto !== '';
+        
+            
+            projectData.Fecha_inicio = new Date(projectData.Fecha_inicio).toISOString().split('T')[0];
+            projectData.Fecha_final = new Date(projectData.Fecha_final).toISOString().split('T')[0];
+            
+          
+            projectData.Id_estado = parseInt(projectData.Id_estado, 10);
+        
+            try {
+                const url = isEditing ? `/proyectos/${projectData.Id_proyecto}` : '/proyectos';
+                const method = isEditing ? 'PATCH' : 'POST';
+        
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(projectData),
+                    credentials: 'include' 
+                });
+        
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `Error al ${isEditing ? 'modificar' : 'crear'} el proyecto`);
+                }
+        
+                document.getElementById('projectModal').style.display = 'none';
+                e.target.reset();
+                await cargaProyectos(); 
+                alert(`Proyecto ${isEditing ? 'modificado' : 'creado'} exitosamente`);
+            } catch (error) {
+                console.error('Error:', error);
+                alert(error.message);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,12 +1,32 @@
 services:
   api:
-    build: ./api
-    container_name: fastapi-container
+    build: ./App
+    container_name: ah_promanage_web
     ports:
-      - "8000:8000"
+      - 8022:8022
     environment:
-      DB_NAME: railway
-      DB_HOST: autorack.proxy.rlwy.net
-      DB_PORT: 52744
-      DB_USER: postgres
-      DB_PASSWORD: KTONJqnAteMSScvyyolzAhfIrBZIeAIX
+      DB_NAME: Promanage  
+      DB_HOST: db  
+      DB_PORT: 7012  
+      DB_USER: Soporte 
+      DB_PASSWORD: 1522  
+    depends_on:
+      - db  
+    volumes:
+      - ./App/Frontend:/App/Frontend  
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: Soporte
+      POSTGRES_PASSWORD: 1522
+      POSTGRES_DB: Promanage
+    ports:
+      - 7012:5432
+
+volumes:
+  pgdata:
+
+ 
+

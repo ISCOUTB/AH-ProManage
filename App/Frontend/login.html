@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0061f2, #00c6fb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            display: flex;
+            width: 800px;
+            height: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .login-section {
+            width: 50%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-section h2 {
+            margin-bottom: 30px;
+            font-size: 28px;
+            color: #0061f2;
+            font-weight: 600;
+        }
+
+        .login-section input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .login-section input:focus {
+            outline: none;
+            border-color: #0061f2;
+        }
+
+        .login-section button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0061f2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .login-section button:hover {
+            background-color: #0056d6;
+        }
+
+        .image-section {
+            width: 50%;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .image-section img {
+            max-width: 80%;
+            height: auto;
+        }
+
+        .image-section p {
+            margin-top: 20px;
+            text-align: center;
+            color: #0061f2;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .register-link {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #0061f2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                width: 90%;
+            }
+
+            .login-section, .image-section {
+                width: 100%;
+            }
+
+            .image-section {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-section">
+            <h2>Iniciar sesión</h2>
+            <form action="/login" method="post">
+                <input type="email" name="username" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Contraseña" required>
+                <button type="submit">Iniciar sesión</button>
+            </form>
+            <div class="register-link">
+                ¿No tienes una cuenta? <a href="/registro">Regístrate</a>
+            </div>
+        </div>
+        <div class="image-section">
+            <img src="https://via.placeholder.com/300x300.png?text=Bienvenido" alt="Ilustración de inicio de sesión">
+            <p>Bienvenido de vuelta</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar con Lista de Proyectos</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+        #sidebar {
+            width: 280px;
+            height: 100vh;
+            background: white;
+            transition: width 0.3s;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-right: 1px solid #e5e7eb;
+        }
+        .logo {
+            padding: 24px;
+        }
+        .logo-circle {
+            width: 32px;
+            height: 32px;
+            background: #4F46E5;
+            border-radius: 50%;
+        }
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 0 12px;
+            flex: 1;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            color: #111827;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .nav-item:hover, .nav-item.active {
+            background-color: #f3f4f6;
+        }
+        .nav-item i {
+            width: 16px;
+            height: 16px;
+            margin-right: 12px;
+            color: #6b7280;
+        }
+        .nav-item .chevron {
+            margin-left: auto;
+            opacity: 0.3;
+        }
+        .project-list {
+            list-style-type: none;
+            padding-left: 16px;
+            display: none;
+            margin: 0;
+        }
+        .project-list.show {
+            display: block;
+        }
+        .project-list li {
+            padding: 6px 0;
+        }
+        .project-list li a {
+            text-decoration: none;
+            color: #111827;
+            font-size: 14px;
+            border-radius: 6px;
+            display: block;
+            padding: 6px 12px;
+        }
+        .project-list li a:hover {
+            background-color: #e5e7eb;
+        }
+        .logout-button {
+            margin-top: auto;
+            border-top: 1px solid #e5e7eb;
+            padding: 16px 24px;
+        }
+        .logout-button:hover {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <div class="logo">
+            <div class="logo-circle"></div>
+        </div>
+        <nav class="nav-items">
+            <a href="/Bienvenido" class="nav-item active">
+                <i data-lucide="layout-grid"></i>
+                <span>Inicio</span>
+            </a>
+            <div class="nav-item" id="projectsToggle">
+                <i data-lucide="folder"></i>
+                <span>Proyectos</span>
+                <i data-lucide="chevron-down" class="chevron"></i>
+            </div>
+            <ul class="project-list" id="projectList">
+               
+            </ul>
+            <a href="/logout" class="nav-item logout-button">
+                <i data-lucide="log-out"></i>
+                <span>Cerrar sesión</span>
+            </a>
+        </nav>
+    </div>
+    <script>
+        lucide.createIcons();
+        async function cargarProyectos() {
+            try {
+                const response = await fetch('/proyectos');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los proyectos');
+                }
+                const data = await response.json();
+        
+                const projectList = document.getElementById('projectList');
+                projectList.innerHTML = ''; // Limpia la lista antes de llenarla
+        
+                data.forEach(proyecto => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="/proyectos/${proyecto.Id_proyecto}">${proyecto.Nombre}</a>`;
+                    projectList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error al cargar los proyectos:', error);
+                const projectList = document.getElementById('projectList');
+                projectList.innerHTML = '<li>Error al cargar los proyectos.</li>';
+            }
+        }
+
+        function toggleProjectList() {
+            console.log('Toggle Projects Clicked');
+            const projectList = document.getElementById('projectList');
+            projectList.classList.toggle('show');
+        
+            if (projectList.classList.contains('show')) {
+                cargarProyectos();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectsToggle = document.getElementById('projectsToggle');
+            projectsToggle.addEventListener('click', toggleProjectList);
+        });
+    </script>
+</body>
+</html>

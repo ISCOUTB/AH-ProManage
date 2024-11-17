@@ -38,7 +38,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         # Establecer el token en una cookie segura
         response = RedirectResponse(url="/Bienvenido", status_code=303)
         response.set_cookie(
-            key="access_token", value=f"Bearer {access_token}", httponly=True, secure=False, max_age=1800, samesite="lax"
+            key="access_token", value=f"Bearer {access_token}", httponly=True, secure=True, max_age=1800, samesite="lax"
         )
         return response
     

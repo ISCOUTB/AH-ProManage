@@ -67,7 +67,7 @@ async def modificar_proyecto(
     user_id: int
 ):
     current_user = get_current_user(request)
-    user_id = current_user.get("user_id") 
+    Usuario = current_user.get("user_id") 
 
     repo = ProyectoRepo()
     try:

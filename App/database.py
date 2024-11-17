@@ -1,9 +1,17 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
 
 
-SQLALCHEMY_DATABASE_URL = "postgresql://Soporte:1522@db:5432/Promanage"
+load_dotenv()
+
+
+db_password = os.getenv("DB_PASSWORD")
+
+
+SQLALCHEMY_DATABASE_URL = f"postgresql://Soporte:{db_password}@db:5432/Promanage"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

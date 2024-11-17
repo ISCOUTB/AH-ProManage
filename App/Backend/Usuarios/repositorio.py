@@ -18,25 +18,6 @@ class UsuarioRepo:
      except SQLAlchemyError as e:
         raise RuntimeError(f"Error al buscar el usuario: {e}")
 
-    
-    
-    def eliminar_usuario(self, id_usuario: int, user_id: int) -> str:
-     try:
-        with SessionLocal() as session:
-            usuario_db = session.query(Usuario).filter(Usuario.Id_usuario == id_usuario).first()
-            if not usuario_db:
-                raise ValueError("Usuario no encontrado para eliminar")
-
-
-            if usuario_db.Id_usuario != user_id:
-                raise ValueError("No tienes permiso para eliminar este usuario")
-
-            session.delete(usuario_db)
-            session.commit()
-            return "Usuario eliminado correctamente"
-     except SQLAlchemyError as e:
-        raise RuntimeError(f"Error al eliminar el usuario: {e}")
-
 
     def actualizar_usuario(self, id_usuario: int, usuario: Actualizar_usuario, user_id: int) -> Usuario_esq:
       try:
